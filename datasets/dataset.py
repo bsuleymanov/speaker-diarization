@@ -27,7 +27,7 @@ class Augmentation:
         self.n_local_views = n_local_views
         self.SIGPRO_MIN_RANDGAIN = -7
         self.SIGPRO_MAX_RANDGAIN = 3
-        self.room_impulse_response_data = np.load("data/rirs/rir.npy")
+        self.room_impulse_response_data = np.load("./data/rirs/rir.npy")
         self.noise_types_snr = {
             #'noise': [0, 15],
             'speech': [13, 20],
@@ -146,6 +146,8 @@ class SDEPDataset(Dataset):
         with torch.no_grad():
             # To obtain even-numbered frames, we delete 100 points for 4s segments
             global_features = self.filter_bank(torch.FloatTensor(global_audios_augmented[:, :63900])) # channels x n_mels x time
+            global_features2 = self.filter_bank(torch.FloatTensor(global_audios_augmented[:, :63900]))
+
             local_features = self.filter_bank(torch.FloatTensor(local_audios_augmented[:, :31900])) # channels x n_mels x time
 
         output = {
@@ -204,3 +206,27 @@ class SDEPInferenceDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
+
+
+class VADDataset(Dataset):
+    """
+    Dataset for voice activity detection.
+    """
+    ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

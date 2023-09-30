@@ -6,6 +6,28 @@ import torch
 import random
 
 
+def find_voice_activity_segments(tensor, frame_rate):
+    segments = []
+    start_time = None
+
+    for i, value in enumerate(tensor):
+        if value == 1:
+            if start_time is None:  # Start of a new segment
+                start_time = i / frame_rate
+        else:
+            if start_time is not None:  # End of a segment
+                end_time = i / frame_rate
+                segments.append((start_time, end_time))
+                start_time = None
+
+    if start_time is not None:
+        end_time = len(tensor) / frame_rate
+        segments.append((start_time, end_time))
+
+    return segments
+
+
+
 def list_to_tensor(list_of_tensors):
     return torch.stack(list_of_tensors, dim=0)
 
